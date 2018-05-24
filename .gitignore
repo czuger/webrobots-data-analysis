@@ -53,3 +53,7 @@ build-iPhoneSimulator/
 *.sqlite3
 
 *.json
+
+err.txt
+out.txt
+

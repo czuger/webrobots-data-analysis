@@ -13,15 +13,16 @@
 ActiveRecord::Schema.define(version: 2018_05_23_135322) do
 
   create_table "kickstarter_datas", force: :cascade do |t|
-    t.string "country"
-    t.string "category"
-    t.integer "year"
-    t.integer "month"
-    t.integer "backers_count"
-    t.float "usd_pledged"
-    t.float "avg_pledge"
-    t.string "url"
-    t.integer "record_id"
+    t.string "country", null: false
+    t.string "category", null: false
+    t.integer "year", null: false
+    t.integer "month", null: false
+    t.integer "backers_count", null: false
+    t.float "usd_pledged", null: false
+    t.float "avg_pledge", null: false
+    t.string "url", null: false
+    t.integer "record_id", null: false
+    t.datetime "state_changed_at", null: false
     t.index ["record_id"], name: "index_kickstarter_datas_on_record_id", unique: true
   end
 
