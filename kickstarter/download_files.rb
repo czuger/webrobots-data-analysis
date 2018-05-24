@@ -6,10 +6,8 @@ require_relative 'process_file'
 require 'open-uri'
 require 'nokogiri'
 
-db_config = YAML.load_file( 'db/config.yml' )
-ActiveRecord::Base.establish_connection(db_config['development'])
-
 n = Nokogiri.parse( open( 'https://webrobots.io/kickstarter-datasets/' ).read )
+directory = '/mnt/shares/projet_geek/kick/'
 
 n.xpath("//li").each do |l|
   match = l.text.match( /(\d+)-(\d+)-(\d+) \[JSON\]/ )
@@ -22,22 +20,22 @@ n.xpath("//li").each do |l|
   day = match[3].to_i
 
   dump_date = Time.new( year, month, day )
-  puts dump_date
+  # puts dump_date
 
-  next if dump_date > Time.new( 2015, 9 )
+  # next if dump_date > Time.new( 2015, 9 )
 
   # p l
   url = l.children[1].attribute('href').value
   # p l.text
 
   puts "Downloading #{url}"
-  open('/tmp/kick.json.gz', 'wb') do |file|
+  f_name = directory + File.basename( url )
+  # p f_name
+
+  open( "#{f_name}", 'wb') do |file|
     file << open(url).read
   end
 
-  puts "Unzipping #{url}"
-  `gunzip -f /tmp/kick.json.gz`
-
-  puts 'Inserting data'
-  ProcessFile.do( '/tmp/kick.json' )
+  puts "Unzipping #{f_name}"
+  `gunzip -f #{f_name}`
 end

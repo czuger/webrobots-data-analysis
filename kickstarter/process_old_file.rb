@@ -65,3 +65,7 @@ class ProcessFile
   end
 
 end
+
+Dir.glob( '/mnt/shares/projet_geek/kick/old/*' ).each do |path|
+  p path
+end
