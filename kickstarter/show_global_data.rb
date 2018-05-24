@@ -12,7 +12,6 @@ end
 #
 request = "SELECT year, count( * ), sum( usd_pledged )/count( * ), sum( usd_pledged ), sum( backers_count ), avg( avg_pledge )
 FROM kickstarter_datas
-WHERE category = 'games/tabletop games'
 GROUP BY year;"
 
 db_config = YAML.load_file( 'db/config.yml' )

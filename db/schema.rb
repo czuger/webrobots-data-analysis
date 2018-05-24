@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2018_05_23_135322) do
     t.integer "month", null: false
     t.integer "backers_count", null: false
     t.float "usd_pledged", null: false
-    t.float "avg_pledge", null: false
+    t.float "avg_pledge"
     t.string "url", null: false
     t.integer "record_id", null: false
     t.datetime "state_changed_at", null: false
