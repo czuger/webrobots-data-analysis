@@ -3,7 +3,7 @@ require 'pp'
 require 'active_record'
 require 'time'
 
-require_relative 'currencies'
+require_relative '../currencies'
 
 class KickstarterDatas < ActiveRecord::Base
 end

@@ -58,3 +58,5 @@ err.txt
 out.txt
 
 data/*
+
+errors.log

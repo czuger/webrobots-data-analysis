@@ -4,16 +4,28 @@ require 'active_record'
 require 'time'
 
 class KickstarterDatas < ActiveRecord::Base
+  WantedCategories = [ 'games/tabletop games', 'games/playing cards' ]
 end
 
 class ProcessFile
 
+   @@logfile = nil
+
   def initialize
     @inserts = 0
     @updates = 0
+    @@logfile ||= File.open( 'errors.log', 'w' )
   end
 
   def process_record( project )
+
+    unless project['category']
+      PP.pp(project,@@logfile)
+      return
+    end
+
+    return unless KickstarterDatas::WantedCategories.include?( project['category']['slug'] )
+
     country = project['country']
     category = project['category']['slug']
 
@@ -58,20 +70,33 @@ class ProcessFile
   end
 
   def do( file_path )
-    wanted_categories = [ "games/tabletop games", "games/playing cards" ]
-
     File.open( file_path, 'r' ).each do |line|
       record = JSON.parse( line )['data']
 
-      unless record['category']
-        puts "Category not found for record"
-        pp record
-        next
+      # unless record['category']
+      #   PP.pp(record,@logfile)
+      #   next
+      # end
+
+      if record['has_more']
+        record['projects'].each do |sub_record|
+
+          unless sub_record
+            PP.pp(record,@@logfile)
+            next
+          end
+
+          process_record( sub_record )
+        end
+      else
+
+        unless record
+          PP.pp(record,@@logfile)
+          next
+        end
+
+        process_record( record )
       end
-
-      next unless wanted_categories.include?( record['category']['slug'] )
-
-      process_record( record )
     end
 
     puts "#{@inserts} rows inserted, #{@updates} rows updated."
