@@ -57,3 +57,4 @@ build-iPhoneSimulator/
 err.txt
 out.txt
 
+data/*

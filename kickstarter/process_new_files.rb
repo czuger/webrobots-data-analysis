@@ -63,6 +63,12 @@ class ProcessFile
     File.open( file_path, 'r' ).each do |line|
       record = JSON.parse( line )['data']
 
+      unless record['category']
+        puts "Category not found for record"
+        pp record
+        next
+      end
+
       next unless wanted_categories.include?( record['category']['slug'] )
 
       process_record( record )
@@ -76,7 +82,7 @@ end
 db_config = YAML.load_file( 'db/config.yml' )
 ActiveRecord::Base.establish_connection(db_config['development'])
 
-Dir.glob( '/mnt/shares/projet_geek/kick/new/*' ).each do |path|
+Dir.glob( 'data/*.json' ).each do |path|
   next unless File.file?( path )
   puts "Processing #{path}"
   ActiveRecord::Base.transaction do

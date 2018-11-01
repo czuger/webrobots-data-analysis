@@ -54,7 +54,12 @@ class ProcessFile
   def do( file_path )
     wanted_categories = [ "games/tabletop games", "games/playing cards" ]
 
-    data = JSON.parse( File.open( file_path, 'r' ).read )
+    data = nil
+    begin
+      data = JSON.parse( File.open( file_path, 'r' ).read )
+    end
+
+    return unless data
 
     data.each do |record|
       record['projects'].each do |project|
@@ -72,7 +77,7 @@ end
 db_config = YAML.load_file( 'db/config.yml' )
 ActiveRecord::Base.establish_connection(db_config['development'])
 
-Dir.glob( '/mnt/shares/projet_geek/kick/old/*' ).each do |path|
+Dir.glob( 'data/*.json' ).each do |path|
   next unless File.file?( path )
   puts "Processing #{path}"
   ActiveRecord::Base.transaction do
